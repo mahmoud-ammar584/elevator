@@ -4,7 +4,11 @@ import { useAuthStore } from '../store/authStore';
 import { useUIStore } from '../store/uiStore';
 import toast from 'react-hot-toast';
 
-export default function SettingsPage() {
+type Props = {
+  onClose?: () => void;
+};
+
+export default function SettingsPage({ onClose }: Props) {
   const { user, logout } = useAuthStore();
   const { lang, theme, toggleTheme, toggleLang, setAccentColor } = useUIStore();
   const isRTL = lang === 'ar';
