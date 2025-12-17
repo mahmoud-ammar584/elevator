@@ -1,6 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root { height: 100%; }
-body { background-color: #f8fafc; font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+:root {
+  /* Dynamic Accent - can be changed via JS */
+  --elevator-neon: #45F882;
+  --elevator-neon-glow: rgba(69, 248, 130, 0.4);
+
+  /* Core Palette */
+  --elevator-bg: #0B0C10;
+  --elevator-card: #1F2833;
+  --elevator-card-hover: #2C394B;
+  --elevator-text: #E0E0E0;
+  --elevator-text-muted: #9CA3AF;
+  --elevator-text-dim: #4B5563;
+  --elevator-border: #2C394B;
+  --elevator-overlay: rgba(31, 40, 51, 0.8);
+
+  /* Functional Colors */
+  --elevator-cyan: #66FCF1;
+  --elevator-accent: #C5C6C7;
+  --elevator-accent-glow: rgba(197, 198, 199, 0.3);
+  --elevator-alert: #FF4C61;
+  --elevator-alert-glow: rgba(255, 76, 97, 0.4);
+
+  /* Fonts */
+  --font-heading: 'Space Grotesk', 'IBM Plex Sans Arabic', sans-serif;
+  --font-body: 'Inter', 'IBM Plex Sans Arabic', sans-serif;
+}
+
+[data-theme='light'] {
+  /* Safe Light Mode Fallback if ever enabled, but strictly enforced dark mainly */
+  --elevator-bg: #F3F4F6;
+  --elevator-card: #FFFFFF;
+  --elevator-card-hover: #F9FAFB;
+  --elevator-text: #111827;
+  --elevator-text-muted: #4B5563;
+  --elevator-border: #E5E7EB;
+}
+
+body {
+  background-color: var(--elevator-bg);
+  color: var(--elevator-text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  /* Prevent horizontal scroll on small screens */
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(31, 40, 51, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(31, 40, 51, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(102, 252, 241, 0.05);
+}
+
+/* Custom Scrollbar - Cyberpunk Slim */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--elevator-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--elevator-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--elevator-neon);
+}
+
+/* Animations */
+@keyframes lift-arrow {
+  0% {
+    transform: translateY(0);
+  }
+
+  45% {
+    transform: translateY(-150%);
+  }
+
+  50% {
+    transform: translateY(150%);
+    opacity: 0;
+  }
+
+  55% {
+    transform: translateY(150%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-lift-arrow {
+  animation: lift-arrow 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes lift-bg {
+  0% {
+    transform: translateY(100%);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-lift-bg {
+  animation: lift-bg 0.6s ease-in-out;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px var(--elevator-neon-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 25px var(--elevator-neon-glow);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s ease-out forwards;
+}
+
+/* Tiny Screen Support ( < 320px ) */
+@media (max-width: 340px) {
+  html {
+    font-size: 14px;
+  }
+}

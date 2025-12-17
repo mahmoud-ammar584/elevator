@@ -39,4 +39,19 @@ export const Calendar = (props: any) => <Svg {...props}>📅</Svg>;
 export const ExternalLink = (props: any) => <Svg {...props}>🔗</Svg>;
 export const Edit = (props: any) => <Svg {...props}>✏️</Svg>;
 
+export const Compass = (props: any) => <Svg {...props}>🧭</Svg>;
+export const ChevronRight = (props: any) => <Svg {...props}>›</Svg>;
+export const Upload = (props: any) => <Svg {...props}>📤</Svg>;
+export const Info = (props: any) => <Svg {...props}>ℹ️</Svg>;
+
+// Missing icons added for Elevator Identity
+export const Globe = (props: any) => <Svg {...props}>🌐</Svg>;
+export const Moon = (props: any) => <Svg {...props}>🌙</Svg>;
+export const Sun = (props: any) => <Svg {...props}>☀️</Svg>;
+export const Flag = (props: any) => <Svg {...props}>🏳️</Svg>;
+export const Ban = (props: any) => <Svg {...props}>🚫</Svg>;
+export const Palette = (props: any) => <Svg {...props}>🎨</Svg>;
+export const Monitor = (props: any) => <Svg {...props}>🖥️</Svg>;
+export const Shield = (props: any) => <Svg {...props}>🛡️</Svg>;
+
 export default {} as any;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ArrowUp, Mail, Lock, Eye, EyeOff, User as UserIcon } from 'lucide-react';
 import { validateEmail, validatePassword } from '../utils/validators';
 
-type Props = { onLogin: (email: string, password: string) => boolean };
+type Props = { onLogin: (email: string, password: string) => Promise<void> | void };
 
 export default function AuthPage({ onLogin }: Props) {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,7 +11,7 @@ export default function AuthPage({ onLogin }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsLoading(true);
     const newErrors: Record<string, string> = {};
     if (!validateEmail(formData.email)) newErrors.email = 'البريد الإلكتروني غير صحيح';
@@ -20,10 +20,16 @@ export default function AuthPage({ onLogin }: Props) {
     if (!isLogin && !formData.displayName.trim()) newErrors.displayName = 'الاسم مطلوب';
     setErrors(newErrors);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      if (Object.keys(newErrors).length === 0) onLogin(formData.email, formData.password);
-    }, 700);
+    if (Object.keys(newErrors).length === 0) {
+      try {
+        await new Promise((res) => setTimeout(res, 700)); // Simulate API call delay
+        await onLogin(formData.email, formData.password);
+      } catch (error: any) {
+        newErrors.general = error.message || 'فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.';
+        setErrors(newErrors);
+      }
+    }
+    setIsLoading(false);
   };
 
   return (
