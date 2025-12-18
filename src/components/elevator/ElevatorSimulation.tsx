@@ -1,6 +1,5 @@
 import React from 'react';
 import FloorDisplay from './FloorDisplay';
-import ElevatorPanel from './ElevatorPanel';
 import DoorSystem from './DoorSystem';
 import { useUIStore } from '../../store/uiStore';
 
@@ -9,10 +8,9 @@ export default function ElevatorSimulation() {
 
     return (
         <div className="flex flex-col gap-6 items-center lg:items-end">
-            {/* Visual Simulation UI (Panel + Display) */}
+            {/* Visual Simulation UI (Display) */}
             <div className="sticky top-24 space-y-6">
                 <FloorDisplay />
-                <ElevatorPanel />
             </div>
 
             {/* The Global Overlay Doors */}
