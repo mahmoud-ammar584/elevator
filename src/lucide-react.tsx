@@ -53,5 +53,6 @@ export const Ban = (props: any) => <Svg {...props}>🚫</Svg>;
 export const Palette = (props: any) => <Svg {...props}>🎨</Svg>;
 export const Monitor = (props: any) => <Svg {...props}>🖥️</Svg>;
 export const Shield = (props: any) => <Svg {...props}>🛡️</Svg>;
+export const Zap = (props: any) => <Svg {...props}>⚡</Svg>;
 
 export default {} as any;
