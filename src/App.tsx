@@ -195,8 +195,10 @@ export default function App(): JSX.Element {
 
                 {/* Floor Status Indicator */}
                 <div className="flex items-center gap-2 px-2 opacity-50 font-mono text-[10px] tracking-widest uppercase">
-                  <Zap className="w-3 h-3 text-[var(--elevator-neon)]" />
-                  Viewing Sector: Floor {currentFloor}
+                  <Zap className={`w-3 h-3 ${elevatorStatus === 'moving' ? 'text-yellow-400 animate-pulse' : 'text-[var(--elevator-neon)]'}`} />
+                  {elevatorStatus === 'moving'
+                    ? (isRTL ? 'جاري الانتقال...' : 'DEPARTING SECTOR...')
+                    : (isRTL ? `قطاع: الطابق ${currentFloor}` : `Viewing Sector: Floor ${currentFloor}`)}
                 </div>
 
                 {activeHashtag && (

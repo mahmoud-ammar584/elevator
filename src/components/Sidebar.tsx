@@ -51,9 +51,12 @@ export default function Sidebar({ openChat, activePage, setPage }: Props) {
 
       {/* Sidebar Container */}
       <div className={`
-        fixed top-0 h-screen w-72 bg-[var(--elevator-bg)] border-dashed border-[var(--elevator-border)] z-40 transition-transform duration-300 ease-out flex flex-col
+        fixed top-0 h-screen w-72 bg-[var(--elevator-bg)] border-dashed border-[var(--elevator-border)] z-40 transition-transform duration-500 ease-in-out flex flex-col
         ${isRTL ? 'right-0 border-l' : 'left-0 border-r'}
-        ${isSidebarOpen ? 'translate-x-0 shadow-[0_0_50px_rgba(0,0,0,0.5)]' : (isRTL ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0')}
+        ${isSidebarOpen
+          ? 'translate-x-0 shadow-[0_0_50px_rgba(0,0,0,0.5)]'
+          : (isRTL ? 'translate-x-full' : '-translate-x-full')
+        }
       `}
         style={{
           borderLeftWidth: isRTL ? '1px' : '0',

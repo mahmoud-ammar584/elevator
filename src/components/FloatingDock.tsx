@@ -11,37 +11,39 @@ type Props = {
 export default function FloatingDock({ activePage, onNavigate }: Props) {
     const { theme, toggleTheme, lang, toggleLang } = useUIStore();
     const { user } = useAuthStore();
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
     const [isHovered, setIsHovered] = useState(false);
+    const [lastScrollY, setLastScrollY] = useState(0);
     const isRTL = lang === 'ar';
 
-    // Auto-show dock when mouse is near bottom on desktop
+    // Auto-show/hide logic
     useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                // Scrolling down - hide
+                setIsVisible(false);
+            } else {
+                // Scrolling up - show
+                setIsVisible(true);
+            }
+            setLastScrollY(currentScrollY);
+        };
+
         const handleMouseMove = (e: MouseEvent) => {
-            // Show if we are in the bottom 20% of the screen
             if (e.clientY > window.innerHeight - 150) {
                 setIsVisible(true);
-            } else if (!isHovered) {
-                // Add a small delay before hiding to prevent flickering
-                setTimeout(() => {
-                    if (!isHovered) setIsVisible(false);
-                }, 1000);
             }
         };
 
-        // Always visible on mobile devices (touch)
-        const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-        if (!isTouch) {
-            window.addEventListener('mousemove', handleMouseMove);
-        } else {
-            setIsVisible(true);
-        }
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('mousemove', handleMouseMove);
 
         return () => {
+            window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('mousemove', handleMouseMove);
         };
-    }, [isHovered]);
+    }, [lastScrollY, isHovered]);
 
     const dockItems = [
         { id: 'home', icon: Home, label: isRTL ? 'الرئيسية' : 'Home', action: () => onNavigate('home') },
