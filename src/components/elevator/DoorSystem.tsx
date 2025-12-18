@@ -5,18 +5,38 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function DoorSystem() {
     const { elevatorStatus, arrivedAtFloor, setElevatorStatus, targetFloor } = useUIStore();
 
+    const playBeep = (freq: number, duration: number) => {
+        try {
+            const AudioCtx = (window as any).AudioContext || (window as any).webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.frequency.value = freq;
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        } catch (e) { /* Audio might be blocked or unsupported */ }
+    };
+
     // Logic to simulate door sequence
     useEffect(() => {
         if (elevatorStatus === 'moving') {
             // Transition to arrived after a timeout (simulating travel)
             const travelTime = 3000;
             const timer = setTimeout(() => {
+                playBeep(880, 0.4); // Arrival ding
                 arrivedAtFloor();
             }, travelTime);
             return () => clearTimeout(timer);
         }
 
         if (elevatorStatus === 'opening') {
+            playBeep(440, 0.1); // Door open click
             const timer = setTimeout(() => {
                 setElevatorStatus('open');
             }, 1200); // Door opening time

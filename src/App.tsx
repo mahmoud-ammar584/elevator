@@ -175,18 +175,18 @@ export default function App(): JSX.Element {
 
       {/* Main Layout Area - 3 Column Design (Elevator | Main | Right) */}
       <div
-        className="transition-all duration-300 min-h-screen px-4 lg:px-8 py-20 flex flex-col lg:flex-row gap-8"
-        style={{
-          [isRTL ? 'paddingRight' : 'paddingLeft']: isSidebarOpen ? '320px' : '0'
-        }}
+        className={`
+          transition-all duration-300 min-h-screen px-4 lg:px-8 py-20 flex flex-col lg:flex-row gap-8
+          ${isSidebarOpen ? (isRTL ? 'lg:pr-[320px]' : 'lg:pl-[320px]') : ''}
+        `}
       >
-        {/* LEFT COLUMN: Elevator HUD & Simulation (Hidden on mobile, in Dock on mobile) */}
-        <div className="hidden lg:block w-72 flex-shrink-0">
+        {/* LEFT COLUMN: Elevator HUD & Simulation (Hidden on mobile) */}
+        <div className="hidden lg:block w-72 flex-shrink-0" role="complementary" aria-label="Elevator Status">
           <ElevatorSimulation />
         </div>
 
         {/* CENTER COLUMN: Content */}
-        <div className="flex-1 max-w-2xl mx-auto w-full">
+        <div className="flex-1 max-w-2xl mx-auto w-full" role="main">
           <Suspense fallback={<div className="p-20 text-center animate-pulse">Loading Floor Content...</div>}>
             {currentPage === 'home' && (
               <div className={`space-y-6 ${elevatorStatus === 'moving' ? 'blur-sm grayscale' : 'transition-all duration-700'}`}>

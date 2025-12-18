@@ -186,7 +186,12 @@ export default function PostCard({ post, onDelete, onLike, onBookmark, openComme
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover/image:opacity-100 transition-opacity"></div>
-              <img src={post.image} alt="Post content" className="w-full h-auto object-cover max-h-[500px]" loading="lazy" />
+              <img
+                src={post.image}
+                alt="Post content"
+                className="w-full h-auto object-cover max-h-[500px]"
+                loading="lazy"
+              />
             </div>
           )}
 
