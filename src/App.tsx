@@ -15,7 +15,6 @@ import SkeletonPost from './components/SkeletonPost';
 import FooterModal from './components/FooterModal';
 import FloatingDock from './components/FloatingDock';
 import CreatePostInput from './components/CreatePostInput';
-import ElevatorSimulation from './components/elevator/ElevatorSimulation';
 
 // Heavy / Secondary Components (Lazy Loaded)
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
@@ -30,7 +29,7 @@ export default function App(): JSX.Element {
   const { posts, fetchFeed, isLoading, createPost, likeToggle, deletePost } = usePostsStore();
   const {
     isSidebarOpen, toggleSidebar, lang, theme, accentColor,
-    followedUsers, toggleFollow, goToFloor, currentFloor, elevatorStatus
+    followedUsers, toggleFollow
   } = useUIStore();
 
   const [currentPage, setCurrentPage] = useState<'home' | 'settings' | 'profile' | 'notifications' | 'explore' | 'upload'>('home');
@@ -44,21 +43,6 @@ export default function App(): JSX.Element {
   const [activeChat, setActiveChat] = useState<any | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [showChat, setShowChat] = useState(false);
-
-  // Keyboard Shortcuts (a11y & Polish)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-
-      // Number keys 0-9 to select floors
-      if (e.key >= '0' && e.key <= '9') {
-        goToFloor(parseInt(e.key));
-        toast(`Moving to floor ${e.key}...`, { icon: '🏙️', duration: 1500 });
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [goToFloor]);
 
   const isRTL = lang === 'ar';
 
@@ -141,13 +125,8 @@ export default function App(): JSX.Element {
     if (activeHashtag) {
       p = p.filter((item: any) => item.content?.toLowerCase().includes(activeHashtag.toLowerCase()));
     }
-
-    if (currentFloor !== 99) {
-      p = p.filter((item: any) => (item.author?.floor_level || 0) <= currentFloor);
-    }
-
     return p;
-  }, [posts, activeHashtag, currentFloor]);
+  }, [posts, activeHashtag]);
 
   if (!isAuthenticated) {
     return (
@@ -173,33 +152,20 @@ export default function App(): JSX.Element {
       {/* SIDEBAR */}
       <Sidebar activePage={currentPage} setPage={handleSetCurrentPage} openChat={() => setShowChat(true)} />
 
-      {/* Main Layout Area - 3 Column Design (Elevator | Main | Right) */}
+      {/* Main Layout Area - Clean 2-3 Column Design */}
       <div
         className={`
           transition-all duration-300 min-h-screen px-4 lg:px-8 py-20 flex flex-col lg:flex-row gap-8
           ${isSidebarOpen ? (isRTL ? 'lg:pr-[320px]' : 'lg:pl-[320px]') : ''}
         `}
       >
-        {/* LEFT COLUMN: Elevator HUD & Simulation (Hidden on mobile) */}
-        <div className="hidden lg:block w-72 flex-shrink-0" role="complementary" aria-label="Elevator Status">
-          <ElevatorSimulation />
-        </div>
-
         {/* CENTER COLUMN: Content */}
         <div className="flex-1 max-w-2xl mx-auto w-full" role="main">
-          <Suspense fallback={<div className="p-20 text-center animate-pulse">Loading Floor Content...</div>}>
+          <Suspense fallback={<div className="p-20 text-center animate-pulse">Loading Content...</div>}>
             {currentPage === 'home' && (
-              <div className={`space-y-6 ${elevatorStatus === 'moving' ? 'blur-sm grayscale' : 'transition-all duration-700'}`}>
+              <div className="space-y-6">
                 <StoriesBar />
                 <CreatePostInput onPost={handleCreatePost} />
-
-                {/* Floor Status Indicator */}
-                <div className="flex items-center gap-2 px-2 opacity-50 font-mono text-[10px] tracking-widest uppercase">
-                  <Zap className={`w-3 h-3 ${elevatorStatus === 'moving' ? 'text-yellow-400 animate-pulse' : 'text-[var(--elevator-neon)]'}`} />
-                  {elevatorStatus === 'moving'
-                    ? (isRTL ? 'جاري الانتقال...' : 'DEPARTING SECTOR...')
-                    : (isRTL ? `قطاع: الطابق ${currentFloor}` : `Viewing Sector: Floor ${currentFloor}`)}
-                </div>
 
                 {activeHashtag && (
                   <div className="flex items-center justify-between bg-[var(--elevator-card)] p-4 rounded-xl border border-[var(--elevator-neon)]">
